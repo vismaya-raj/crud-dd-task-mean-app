@@ -40,6 +40,18 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSH_KEY }}
         script: |
+          mkdir -p /home/ubuntu/mean-app
           cd /home/ubuntu/mean-app
+          
+          # Download docker-compose file
+          curl -o docker-compose.yml https://raw.githubusercontent.com/${{ github.repository }}/main/docker-compose.prod.yml
+          
+          # Download nginx config
+          curl -o nginx.conf https://raw.githubusercontent.com/${{ github.repository }}/main/nginx/nginx.conf
+          
+          # Set environment variable
+          export DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
+          
+          # Pull and start services
           docker-compose pull
           docker-compose up -d
